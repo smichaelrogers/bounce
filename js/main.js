@@ -1,5 +1,3 @@
 (function(window) {
-    
 
-
-}(window))
+}(window));

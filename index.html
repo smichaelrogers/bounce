@@ -3,28 +3,32 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Jump</title>
+    <title>bounce</title>
     <link href="css/style.css" rel="stylesheet">
 </head>
 
 <body onload="init();">
+    <div id="heading">
+        <h1>bounce</h1>
+    </div>
     <div id="content-wrap">
         <div id="content">
-            <canvas id="gameCanvas" width="900" height="600"></canvas>
+            <canvas id="gameCanvas" width="900" height="480"></canvas>
         </div>
     </div>
     <script src="lib/preloadjs-NEXT.min.js"></script>
     <script src="lib/easeljs-NEXT.combined.js"></script>
+    <script src="lib/jquery.min.js"></script>
     <script src="js/ball.js"></script>
     <script src="js/platform.js"></script>
-    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
     <script>
 var PLATFORM_HEIGHT = 10;
 var BALL_SIZE = 10;
 var ROWS = 100;
 var COLUMNS = 20;
 var ROW_HEIGHT = 400;
-var COLUMN_WIDTH = 160;
+var COLUMN_WIDTH = 200;
 var canvas;
 var w;
 var h;
@@ -53,7 +57,6 @@ var splash;
 var queue;
 var loadField;
 var loadingInterval = 0;
-
 
 document.onkeydown = handleKeyDown;
 document.onkeyup = handleKeyUp;
@@ -87,12 +90,12 @@ function init() {
         src: "assets/splash.png"
     }, {
         id: "bg",
-        src: "assets/slice1.png"
+        src: "assets/bg.png"
     }]);
 }
 
 function handleProgress(event) {
-    loadField.text = "Loading\n"  + (queue.progress * 100 | 0) + "%";
+    loadField.text = "Loading\n" + (queue.progress * 100 | 0) + "%";
     stage.update();
 }
 
@@ -103,21 +106,21 @@ function handleComplete(event) {
     bg = new createjs.Container();
     bgGradient = new createjs.Bitmap(queue.getResult("bg"));
     bg.addChild(bgGradient);
-    bg.scaleY = -1;
 
     splash = new createjs.Container();
     var img = new createjs.Bitmap(queue.getResult("splash"));
     splash.addChild(img);
-    splash.scaleY = -1;
+    splash.x = -30;
+    splash.y = h;
 
-    messageField = new createjs.Text("Click", "normal 20px 'Helvetica Neue'", "#3e3e3e");
+    messageField = new createjs.Text("Click", "normal 14px 'Helvetica Neue'", "#ffffff");
     messageField.textAlign = "left";
-    messageField.lineHeight = 32;
-    messageField.x = 120;
-    messageField.y = h - 120;
+    messageField.lineHeight = 24;
+    messageField.x = 220;
+    messageField.y = h - 12;
     messageField.maxWidth = w;
 
-    roundField = new createjs.Text("0", "bold italic 16px 'Helvetica Neue'", "#000000");
+    roundField = new createjs.Text("0", "bold italic 16px 'Helvetica Neue'", "#919191");
     roundField.textAlign = "right";
     roundField.x = w - 40;
     roundField.y = h - 10;
@@ -126,13 +129,13 @@ function handleComplete(event) {
     jumpField = new createjs.Text("0", "bold 48px 'Helvetica Neue'", "#ff004c");
     jumpField.textAlign = "right";
     jumpField.x = w - 40;
-    jumpField.y = h - 40;
+    jumpField.y = 50;
     jumpField.maxWidth = 1000;
 
-    jumpSubField = new createjs.Text("0", "bold 10px 'Helvetica Neue'", "#969696");
+    jumpSubField = new createjs.Text("Jumps", "bold italic 10px 'Helvetica Neue'", "#b0b0b0");
     jumpSubField.textAlign = "right";
-    jumpSubField.x = w - 39;
-    jumpSubField.y = h - 88;
+    jumpSubField.x = w - 40;
+    jumpSubField.y = 43;
     jumpSubField.maxWidth = 1000;
 
     gravityField = new createjs.Text("0", "italic 10px 'Helvetica Neue'", "#9f9f9f");
@@ -141,23 +144,24 @@ function handleComplete(event) {
     gravityField.y = h - 30;
     gravityField.maxWidth = 1000;
 
-    distanceField = new createjs.Text("0", "bold italic 16px 'Helvetica Neue'", "#6e6e6e");
+    distanceField = new createjs.Text("0", "bold italic 16px 'Helvetica Neue'", "#656565");
     distanceField.textAlign = "right";
-    distanceField.x = w - 160;
-    distanceField.y = h - 4;
+    distanceField.x = w - 40;
+    distanceField.y = h - 45;
     distanceField.maxWidth = 1000;
 
-    stage.addChild(splash, messageField);
+    stage.addChild(splash, bg, messageField);
+    messageField.scaleY = -1;
+    bg.scaleY = -1;
+    splash.scaleY = -1;
 
-    splash.x = -30;
-    splash.y = h;
     stage.setChildIndex(world, 1);
     stage.setChildIndex(messageField, 2);
-    stage.setChildIndex(splash, 3);
-    stage.setChildIndex(bg,4);
+    stage.setChildIndex(splash, 4);
+    stage.setChildIndex(bg, 3);
 
-    messageField.scaleY = -1;
-    messageField.text = "↑ jump \n↓ bounce \n↑ weaker gravity, less platforms, slower jump regeneration \n↓ stronger gravity, more platforms, slower jump regeneration\n  the ball can jump whilst mid-jump\n  a bounce is stronger than a jump\n  reach the top of the level\n\n  cick to start";
+    messageField.text =
+        "↑ jump \n↓ bounce \n↑ weaker gravity, less platforms, slower jump regeneration \n↓ stronger gravity, more platforms, slower jump regeneration\n  a ball can jump whilst jumping\n  a ball would rather bounce than jump\n\n  reach the top to win\n  click to start";
     stage.update();
     canvas.onclick = handleClick;
 }
@@ -169,10 +173,8 @@ function retry() {
     stage.addChild(loadField);
     loadField.text = "Click";
     stage.update();
-
     canvas.onclick = restart;
 }
-
 
 function handleClick() {
     canvas.onclick = null;
@@ -183,6 +185,8 @@ function handleClick() {
 function restart() {
     stage.removeChild(loadField);
     world.removeAllChildren();
+    stage.setChildIndex(world, 1);
+    stage.setChildIndex(bg, 2);
     difficulty = 8;
     nextRound = 1000;
     round = 1;
@@ -193,9 +197,7 @@ function restart() {
     gravityField.text = "";
     jumpHeld = false;
     diveHeld = false;
-
     setAssets();
-
     if (!createjs.Ticker.hasEventListener("tick")) {
         createjs.Ticker.addEventListener("tick", tick);
     }
@@ -284,44 +286,35 @@ function setAssets() {
             if (!grid[x][y]) {
                 startX = (x - 1) * COLUMN_WIDTH;
                 startY = (y - 1) * ROW_HEIGHT;
-                pX = Math.random() * (COLUMN_WIDTH) * 2;
-                if (pX < .5 * COLUMN_WIDTH) {
-                    pX += .5 * COLUMN_WIDTH;
-                }
-                pY = Math.random() * ROW_HEIGHT;
-                gapX = COLUMN_WIDTH - (pX * 0.5);
-                gapY = ROW_HEIGHT - pY;
+                pX = (Math.pow(Math.random(), 2) * COLUMN_WIDTH) + (0.5 * COLUMN_WIDTH);
+                pY = (Math.random() * ROW_HEIGHT);
+                gapX = COLUMN_WIDTH - pX;
+                startX += gapX;
                 if (x % 2 === 0) {
-                    startX += gapX;
-                    startY += gapY + ROW_HEIGHT;
+                    startY += pY;
                 } else {
-                    startX += gapX;
-                    startY -= gapY + ROW_HEIGHT;
+                    startY -= pY;
                 }
-                addChance *= 0.9;
+                addChance *= 0.75;
                 p = new Platform(startX, startY, difficulty, 0, pX, PLATFORM_HEIGHT, x, y);
                 platforms.push(p);
                 world.addChild(p);
             } else {}
         }
     }
-    platforms.forEach(function(platform) {
-        // console.log("(" + platform.x + "," + platform.y + ")");
-    });
     worldWidth += COLUMN_WIDTH * COLUMNS;
     worldHeight = ROW_HEIGHT * ROWS;
     ball = new Ball(BALL_SIZE);
-
     ball.x = 200;
     ball.y = 200;
     stage.clear();
     stage.update();
+    // world.scaleX = 0.05;
+    // world.scaleY = 0.05;
     world.addChild(ball);
     if (createjs.Ticker.hasEventListener("tick")) {
         createjs.Ticker.removeEventListener("tick", tick);
     }
-    // world.scaleX = 0.05;
-    // world.scaleY = 0.05;
 }
 
 function tick(event) {
@@ -385,7 +378,7 @@ function tick(event) {
     }
     roundField.text = "Round: " + round;
     distanceField.text = Math.floor((worldHeight - ball.y) / 10) + "m to go";
-    jumpField.text = ball.jumps + "";
+    jumpField.text = Array(ball.jumps + 1).join("▰");
     gravityField.text = "Gravity: " + (ball.a * 10).toFixed(1);
     ball.tick(event);
     stage.update(event);
@@ -408,8 +401,6 @@ function removePlatformSlope() {
         platform.vY = 0;
     });
 }
-
-
 
 function handleKeyDown(e) {
     switch (e.keyCode) {

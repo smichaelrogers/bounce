@@ -9,7 +9,7 @@ var colors = ["rgba(0, 110, 255, 0.15)", "rgba(255, 46, 0, 0.15)", "rgba(255, 21
 		this.platform2.graphics.ss(2).s("rgba(147, 147, 147, 1)").f("rgba(255, 255, 255, 0.02)")
 			.lt(0,0)
 			.lt(-5, sizeY)
-			.lt(sizeX +5, sizeY)
+			.lt(sizeX + 5, sizeY)
 			.lt(sizeX, 0)
 			.lt(0,0)
 			.closePath();
@@ -17,6 +17,7 @@ var colors = ["rgba(0, 110, 255, 0.15)", "rgba(255, 46, 0, 0.15)", "rgba(255, 21
 			.lt(0, 0)
 			.lt(sizeX - 5, 0)
 			.lt(.5*sizeX, -b)
+			.lt(5, 0)
 			.lt(0,0)
 			.closePath();
 		this.addChild(this.platform, this.platform2);
