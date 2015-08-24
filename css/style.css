@@ -1,0 +1,17 @@
+html, body {
+    width: 100%;
+    height: auto;
+    border: 0;
+    padding: 0;
+    background: rgb(201, 201, 201);
+  }
+body {
+    text-align: center;
+}
+canvas {
+  /*background: url("../assets/paper_fibers_@2x.png");*/
+  transform: rotateX(180deg);
+}
+#canvas-wrap {
+    position: relative;
+}
