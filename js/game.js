@@ -44,7 +44,6 @@ function reset() {
   pause();
   canvas.onclick = null;
   world.removeAllChildren();
-  
   ball.reset();
   difficulty = 10;
   round = 1;
@@ -57,13 +56,11 @@ function reset() {
   distanceField.innerHTML = 0;
   jumpField.innerHTML = "▰▰▰▰▰▰";
   gravityField.innerHTML = (ball.a * 10).toFixed(1);
-
   var setPlatform = false;
   var rn, p, startX, startY, gapX, gapY, pX, pY, addChance, totalChance, x, y;
   grid = [];
   platforms = [];
   worldWidth = 0;
-    
   for(x = 0; x <= COLUMNS; x++) {
     grid[x] = [];
     for(y = 0; y <= ROWS; y++) {
@@ -123,7 +120,6 @@ function reset() {
           }
         }
       }
-      
       if(!grid[x][y]) {
         startX = (x - 1) * COLUMN_WIDTH;
         startY = (y - 1) * ROW_HEIGHT;
@@ -143,17 +139,13 @@ function reset() {
       } else {}
     }
   }
-  
   worldWidth += COLUMN_WIDTH * COLUMNS;
   worldHeight = ROW_HEIGHT * ROWS;
-  
   ball.x = 200;
   ball.y = 200;
-  
   world.addChild(ball);
   stage.clear();
   stage.update();
-  
   canvas.onclick = unpause;
 }
 
