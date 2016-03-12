@@ -1,25 +1,33 @@
 (function (window) {
-	var JUMP_VELOCITY = 13.0;
-	var DIVE_VELOCITY = -32.0;
-	var START_GRAVITY = -0.7;
-	var MAX_JUMPS = 5;
-
-	function Ball(size) {
-		this.Container_constructor();
-		this.size = size;
-		this.ball = new createjs.Shape();
-		this.addChild(this.ball);
-		this.ballGfx = this.ball.graphics;
-		this.ballGfx.clear();
-		this.ballGfx.setStrokeStyle(2)
-			.beginRadialGradientFill(["rgb(255, 255, 255)", "rgba(255, 0, 84, 1)"], [0, 1], this.size / 2, this.size * 1.33, 0, this.size / 3, this.size * 1.33, this.size / 2)
-			.drawCircle(this.size / 2, this.size, this.size);
-		this.jumpReleased = true;
-		this.jumps = MAX_JUMPS;
-		this.a = START_GRAVITY;
+	function Ball() {
+		this.Shape_constructor();
+    this.size = 10;
+    this.graphics.clear();
+    this.graphics.rf(['white','#ff0054'],[0, 1], 5, 13, 0, 3, 13, 5).dc(5, 10, 10);
+	}
+  
+  var p = createjs.extend(Ball, createjs.Shape);
+  
+  p.JUMP_VELOCITY = 15.0;
+  p.DIVE_VELOCITY = -30.0;
+  p.INITIAL_GRAVITY = -0.75;
+  p.MAX_JUMPS = 6;
+  
+  p.a;
+  p.t;
+  p.v0;
+  p.y0;
+  p.dY;
+  p.jumps;
+  p.jumpReleased;
+  
+  p.reset = function() {
+    this.jumpReleased = true;
+		this.jumps = this.MAX_JUMPS;
+		this.a = this.INITIAL_GRAVITY;
 		this.dY = 0.0;
 		this.t = 0.0;
-		this.v0 = JUMP_VELOCITY;
+		this.v0 = this.JUMP_VELOCITY;
 		this.y0 = 500.0;
 		this.diving = false;
 		this.dYN = [1, 1, 1];
@@ -27,70 +35,65 @@
 		this.squish = 1.0;
 		this.yN = 0;
 		this.jumpTimer = 0.0;
-	}
-
-	var p = createjs.extend(Ball, createjs.Container);
-	var sum;
-
-	p.ball;
-	p.a;
-	p.t;
-	p.v0;
-	p.y0;
-	p.dY;
-	p.jumps;
-	p.jumpReleased;
+  }
 
 	p.recognizeAltitude = function (worldY) {
-		this.a = START_GRAVITY + (Math.abs(this.y) / (worldY * 3));
+		this.a = this.INITIAL_GRAVITY + (Math.abs(this.y) / (worldY * 3));
 	}
 
-	p.tick = function (event) {
-		this.assertSquishiness();
+	p.tick = function () {
+		this.applySquish();
+    
 		this.t += 1.0;
 		this.jumpTimer += 1.0;
+    
+    // replenish jumps
 		if (this.jumpTimer >= 16 + ((this.a + 1) * 80) && this.jumps < 5) {
 			this.jumps++;
-			console.log(16 + ((this.a + 1) * 80));
 			this.jumpTimer = 0;
 		}
-		var n = (0.5 * this.a * Math.pow(this.t, 2)) + (this.v0 * this.t) + this.y0;
+    
+    // Got this one ( '1/2(g * t^2)' ) from 'Equations_for_a_falling_body' on Wikipedia
+    var n = (0.5 * this.a * Math.pow(this.t, 2)) + (this.v0 * this.t) + this.y0;
+    // set current velocity
 		this.dY = n - this.y;
+    // set current position
 		this.y = n;
 	}
 
-	p.assertSquishiness = function () {
-		if (this.scaleY < 0.95 && this.scaleY > 0.8) {
-			this.scaleY += (Math.abs(1.0 - this.scaleY) / 12);
-		}
-		if (this.scaleY > 1.05 && this.scaleY < 1.3) {
-			this.scaleY -= (Math.abs(1.0 - this.scaleY) / 8);
-		}
-		if (this.scaleX < 0.95 && this.scaleX > 0.8) {
-			this.scaleX += (Math.abs(1.0 - this.scaleX) / 12);
-		}
-		if (this.scaleX > 1.05 && this.scaleX < 1.3) {
-			this.scaleX -= (Math.abs(1.0 - this.scaleX) / 12);
-		}
-		this.idx = (this.idx + 1) % 3;
-		this.dYN[this.idx] = this.dY / 40;
-		sum = 0;
-		for (var i = 0; i < 3; i++) {
-			sum += this.dYN[i];
-		}
-		this.squish = sum / 3;
-		this.scaleX = 1.0 + (this.squish / 2);
-		this.scaleY = 1.0 - (this.squish / 2);
-	}
+  p.applySquish = function () {
+    // don't let the ball squish itself inside out
+    if (this.scaleY < 0.95 && this.scaleY > 0.8) {
+      this.scaleY += (Math.abs(1.0 - this.scaleY) / 12);
+    } else if (this.scaleY > 1.05 && this.scaleY < 1.3) {
+      this.scaleY -= (Math.abs(1.0 - this.scaleY) / 8); }
+      
+    // same thing for the x axis
+    if (this.scaleX < 0.95 && this.scaleX > 0.8) {
+      this.scaleX += (Math.abs(1.0 - this.scaleX) / 12);
+    } else if (this.scaleX > 1.05 && this.scaleX < 1.3) {
+      this.scaleX -= (Math.abs(1.0 - this.scaleX) / 12); }
+
+    // determine current squishiness with shape normalizing over time
+    this.idx = (this.idx + 1) % 3;
+    this.dYN[this.idx] = this.dY / 40;
+    var s = 0;
+    for (var i = 0; i < 3; i++) s += this.dYN[i];
+    this.squish = s / 3;
+    this.scaleX = 1.0 + (this.squish / 2);
+    this.scaleY = 1.0 - (this.squish / 2);
+  }
 
 	p.hit = function (platform) {
 		this.diving = false;
+    
 		if (this.dY < 0) {
 			this.y0 = platform.y + platform.sizeY;
 			this.v0 = Math.sqrt(Math.pow(this.a * this.dY, 2));
 			this.t = 0.0;
+      
 		} else if (this.dY > 2) {
-			this.y0 = platform.y - ball.size;
+			this.y0 = platform.y - this.size;
 			this.v0 = 0.8 * this.a * this.v0;
 			this.t = 0.0;
 		}
@@ -98,19 +101,21 @@
 
 	p.jump = function () {
 		if (this.jumpReleased && this.jumps > 0 && !this.diving && (this.t > 0.15 || Math.abs(this.squish) < 0.01)) {
-			this.v0 = JUMP_VELOCITY;
+			this.v0 = this.JUMP_VELOCITY;
 			this.t = 0.0;
 			this.jumpTimer = 0;
 			this.y0 = this.y;
 			this.jumps--;
 			this.jumpReleased = false;
+      return true;
 		}
+    return false;
 	}
 
 	p.dive = function () {
 		if (!this.diving && this.jumpReleased & this.t > 10) {
 			this.t = 0.5;
-			this.v0 = DIVE_VELOCITY;
+			this.v0 = this.DIVE_VELOCITY;
 			this.y0 = this.y + 60;
 			this.jumpReleased = false;
 			this.diving = true;
@@ -121,5 +126,5 @@
 		this.jumpReleased = true;
 	}
 
-	window.Ball = createjs.promote(Ball, "Container");
+	window.Ball = createjs.promote(Ball, "Shape");
 }(window));
