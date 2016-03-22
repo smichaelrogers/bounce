@@ -8,7 +8,7 @@ var w = 800;
 var h = 400;
 var ticks = 1;
 var round = 1;
-var difficulty = 10;
+var difficulty = 6;
 var jumpHeld = false;
 var diveHeld = false;
 var paused = true;
@@ -42,10 +42,9 @@ function init() {
 
 function reset() {
   pause();
-  canvas.onclick = null;
   world.removeAllChildren();
   ball.reset();
-  difficulty = 10;
+  difficulty = 7;
   round = 1;
   ticks = 1;
   world.x = 0;
@@ -220,7 +219,7 @@ function increaseDifficulty() {
 
 function handleKeyDown(e) {
   switch(e.keyCode) {
-  case 80:
+  case 32:
     if(paused) {
       unpause();
     } else {

@@ -6,9 +6,9 @@
     this.graphics.rf(['white', '#ff0054'], [0, 1], 5, 13, 0, 3, 13, 5).dc(5, 10, 10);
   }
   var p = createjs.extend(Ball, createjs.Shape);
-  p.JUMP_VELOCITY = 15.0;
+  p.JUMP_VELOCITY = 14.0;
   p.DIVE_VELOCITY = -30.0;
-  p.INITIAL_GRAVITY = -0.75;
+  p.INITIAL_GRAVITY = -0.7;
   p.MAX_JUMPS = 6;
   p.a;
   p.t;
@@ -40,7 +40,7 @@
     this.t += 1.0;
     this.jumpTimer += 1.0;
     // replenish jumps
-    if(this.jumpTimer >= 16 + ((this.a + 1) * 80) && this.jumps < 5) {
+    if(this.jumpTimer >= 10 + ((this.a + 1) * 80) && this.jumps < 6) {
       this.jumps++;
       this.jumpTimer = 0;
     }

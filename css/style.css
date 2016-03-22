@@ -138,7 +138,7 @@ hr {
   left: 20px;
   top: 70px;
   font-size: 20px;
-  content: '(click)';
+  content: 'Up-arrow to jump, down-arrow to dive.  Spacebar to start/stop';
   color: #999;
   letter-spacing: 2px;
 }
