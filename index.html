@@ -1,54 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Bounce</title>
-    <link rel="stylesheet" href="css/style.css">
-  </head>
-  <body onload="init();">
-    <div class="paused" id="game">
-      <div class="row header">
-        <div class="header__item" style="width: 300px;">
-          <h1 class="header__item-title">Bounce</h1>
-        </div>
-        <div class="header__item" style="width: 100px;">
-          <div class="header__item-value" id="round">1</div>
-          <div class="header__item-label">round</div>
-        </div>
-        <div class="header__item" style="width: 100px;">
-          <div class="header__item-value" id="distance">0</div>
-          <div class="header__item-label">to the top</div>
-        </div>
-        <div class="header__item" style="width: 100px;">
-          <div class="header__item-value" id="gravity">0</div>
-          <div class="header__item-label">gravity</div>
-        </div>
-        <div class="header__item" style="width: 200px;">
-          <div class="header__item-value" id="jumps">▰▰▰▰▰</div>
-          <div class="header__item-label">jumps left</div>
-        </div>
+
+<head>
+  <meta charset="utf-8">
+  <title>Bounce</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body onload="init();">
+  <div class="paused" id="game">
+    <div class="row header">
+      <div class="header__item" style="width: 300px;">
+        <h1 class="header__item-title">Bounce</h1>
       </div>
-      <div class="row content">
-        <canvas id="canvas" width="800" height="400"></canvas>
+      <div class="header__item" style="width: 100px;">
+        <div class="header__item-value" id="round">1</div>
+        <div class="header__item-label">round</div>
       </div>
-      <div class="row footer">
-        <div class="footer__item">
-          <p>As the ball goes up, gravity decreases, platforms are more spread out, and jumps replenish more slowly.  As more time goes by, the world moves faster.</p>
-          <hr>
-          <p>
-            by Scott Rogers, <a href="https://github.com/smichaelrogers/bounce">view source on github</a>
-          </p>
-        </div>
-        <div class="footer__item">
-          <p><strong>up arrow</strong>: jump</p>
-          <p><strong>down arrow</strong>: dive</p>
-          <p><strong>p</strong>: pause</p>
-        </div>
+      <div class="header__item" style="width: 100px;">
+        <div class="header__item-value" id="distance">0</div>
+        <div class="header__item-label">to the top</div>
+      </div>
+      <div class="header__item" style="width: 100px;">
+        <div class="header__item-value" id="gravity">0</div>
+        <div class="header__item-label">gravity</div>
+      </div>
+      <div class="header__item" style="width: 200px;">
+        <div class="header__item-value" id="jumps">▰▰▰▰▰</div>
+        <div class="header__item-label">jumps left</div>
       </div>
     </div>
-    <script src="js/vendor/easeljs.min.js"></script>
-    <script src="js/ball.js"></script>
-    <script src="js/platform.js"></script>
-    <script src="js/game.js"></script>
-  </body>
+    <div class="row content">
+      <canvas id="canvas" width="800" height="400"></canvas>
+    </div>
+    <div class="row">
+      <p>
+        As the ball goes up, gravity decreases, platforms are more spread out, and jumps replenish more slowly.
+        <br> As more time goes by, the world moves faster.
+        <br>
+        <br> by Scott M. Rogers, <a href="https://github.com/smichaelrogers/bounce">view source on github</a>
+      </p>
+    </div>
+  </div>
+  <script src="js/vendor/easeljs.min.js"></script>
+  <script src="js/ball.js"></script>
+  <script src="js/platform.js"></script>
+  <script src="js/game.js"></script>
+</body>
+
 </html>

@@ -1,4 +1,4 @@
-(function (window) {
+(function(window) {
   function Ball() {
     this.Shape_constructor();
     this.size = 10;
@@ -17,7 +17,7 @@
   p.dY;
   p.jumps;
   p.jumpReleased;
-  p.reset = function () {
+  p.reset = function() {
     this.jumpReleased = true;
     this.jumps = this.MAX_JUMPS;
     this.a = this.INITIAL_GRAVITY;
@@ -32,61 +32,54 @@
     this.yN = 0;
     this.jumpTimer = 0.0;
   }
-  p.recognizeAltitude = function (worldY) {
+  p.recognizeAltitude = function(worldY) {
     this.a = this.INITIAL_GRAVITY + (Math.abs(this.y) / (worldY * 3));
   }
-  p.tick = function () {
+  p.tick = function() {
     this.applySquish();
     this.t += 1.0;
     this.jumpTimer += 1.0;
-    // replenish jumps
-    if(this.jumpTimer >= 10 + ((this.a + 1) * 80) && this.jumps < 6) {
+    if (this.jumpTimer >= 10 + ((this.a + 1) * 80) && this.jumps < 6) {
       this.jumps++;
       this.jumpTimer = 0;
     }
-    // Got this one ( '1/2(g * t^2)' ) from 'Equations_for_a_falling_body' on Wikipedia
     var n = (0.5 * this.a * Math.pow(this.t, 2)) + (this.v0 * this.t) + this.y0;
-    // set current velocity
     this.dY = n - this.y;
-    // set current position
     this.y = n;
   }
-  p.applySquish = function () {
-    // don't let the ball squish itself inside out
-    if(this.scaleY < 0.95 && this.scaleY > 0.8) {
+  p.applySquish = function() {
+    if (this.scaleY < 0.95 && this.scaleY > 0.8) {
       this.scaleY += (Math.abs(1.0 - this.scaleY) / 12);
-    } else if(this.scaleY > 1.05 && this.scaleY < 1.3) {
+    } else if (this.scaleY > 1.05 && this.scaleY < 1.3) {
       this.scaleY -= (Math.abs(1.0 - this.scaleY) / 8);
     }
-    // same thing for the x axis
-    if(this.scaleX < 0.95 && this.scaleX > 0.8) {
+    if (this.scaleX < 0.95 && this.scaleX > 0.8) {
       this.scaleX += (Math.abs(1.0 - this.scaleX) / 12);
-    } else if(this.scaleX > 1.05 && this.scaleX < 1.3) {
+    } else if (this.scaleX > 1.05 && this.scaleX < 1.3) {
       this.scaleX -= (Math.abs(1.0 - this.scaleX) / 12);
     }
-    // determine current squishiness with shape normalizing over time
     this.idx = (this.idx + 1) % 3;
     this.dYN[this.idx] = this.dY / 40;
     var s = 0;
-    for(var i = 0; i < 3; i++) s += this.dYN[i];
+    for (var i = 0; i < 3; i++) s += this.dYN[i];
     this.squish = s / 3;
     this.scaleX = 1.0 + (this.squish / 2);
     this.scaleY = 1.0 - (this.squish / 2);
   }
-  p.hit = function (platform) {
+  p.hit = function(platform) {
     this.diving = false;
-    if(this.dY < 0) {
+    if (this.dY < 0) {
       this.y0 = platform.y + platform.sizeY;
       this.v0 = Math.sqrt(Math.pow(this.a * this.dY, 2));
       this.t = 0.0;
-    } else if(this.dY > 2) {
+    } else if (this.dY > 2) {
       this.y0 = platform.y - this.size;
       this.v0 = 0.8 * this.a * this.v0;
       this.t = 0.0;
     }
   }
-  p.jump = function () {
-    if(this.jumpReleased && this.jumps > 0 && !this.diving && (this.t > 0.15 || Math.abs(this.squish) < 0.01)) {
+  p.jump = function() {
+    if (this.jumpReleased && this.jumps > 0 && !this.diving && (this.t > 0.15 || Math.abs(this.squish) < 0.01)) {
       this.v0 = this.JUMP_VELOCITY;
       this.t = 0.0;
       this.jumpTimer = 0;
@@ -97,8 +90,8 @@
     }
     return false;
   }
-  p.dive = function () {
-    if(!this.diving && this.jumpReleased & this.t > 10) {
+  p.dive = function() {
+    if (!this.diving && this.jumpReleased & this.t > 10) {
       this.t = 0.5;
       this.v0 = this.DIVE_VELOCITY;
       this.y0 = this.y + 60;
@@ -106,7 +99,7 @@
       this.diving = true;
     }
   }
-  p.releaseJump = function () {
+  p.releaseJump = function() {
     this.jumpReleased = true;
   }
   window.Ball = createjs.promote(Ball, "Shape");
