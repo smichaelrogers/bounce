@@ -1,16 +1,8 @@
-# Bounce
+# bounce
 
 
-A game about a bouncing ball, [play it here](http://www.scottmichael.net/bounce)
+Platform hopping bouncing ball game, [you can play it here](http://www.scottmichael.net/bounce)
 
-Uses canvas, some physics, and some interesting "squish" related functions
+written in javascript
 
-[![](https://raw.githubusercontent.com/smichaelrogers/bounce/master/screen.png)](http://www.scottmichael.net/bounce)
-
-
-
-
-
-## Copyright
-
-Copyright © 2016 Scott Rogers – Released under MIT License
+[![when things get crazy](https://raw.githubusercontent.com/smichaelrogers/bounce/master/bouncegif.gif)](https://smichaelrogers.github.io/bounce)

@@ -6,150 +6,130 @@
   margin: 0;
   border: 0;
 }
-
+html { font-size: 16px; }
 body {
-  font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  font-family: 'avenir', 'avenir next', 'helvetica neue', helvetica, arial, sans-serif;
+  font-weight: 400;
   height: 100vh;
   width: 100%;
   overflow: hidden;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  background: #fff;
+  justify-content: center;
+  align-items: center;
+  background: #F1F1F1;
 }
 
-#game {
-  width: 810px;
-  margin: 0 auto;
+.container {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-flow: column nowrap;
-      -ms-flex-flow: column nowrap;
-          flex-flow: column nowrap;
-  padding: 5px;
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-.row {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-flow: row nowrap;
-      -ms-flex-flow: row nowrap;
-          flex-flow: row nowrap;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-}
 .header {
-  height: 50px;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-              -ms-grid-row-align: center;
-          align-items: center;
-}
-.content {
-  height: 400px;
-}
-.header__item {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+  height: 35px;
   display: flex;
-  -webkit-flex-flow: column nowrap;
-      -ms-flex-flow: column nowrap;
-          flex-flow: column nowrap;
-  -webkit-box-align: start;
-  -webkit-align-items: flex-start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
-  width: 160px;
+  flex-flow: row nowrap;
+  justify-content: space-between;
 }
-.header__item-title {
+.header-group {
+  flex: 1 1 100px;
+  display: flex;
+  align-items: center;
+}
+.header-item {
+  flex: 1 0 100px;
+  padding: 2.5px 10px;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
+.header-item small {
   color: #999;
-  font-weight: 300;
-  height: 30px;
-  font-size: 30px;
-  line-height: 30px;
-}
-.header__item-value {
-  color: #555;
-  font-weight: bold;
-  height: 20px;
-  font-size: 20px;
-  line-height: 30px;
-  text-align: center;
-}
-.header__item-label {
-  text-align: center;
-  color: #999;
-  height: 10px;
   font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 10px;
+  height: 10px;
+  padding: 0 4px;
+}
+.header h1 {
+  color: #999;
+  font-weight: 400;
+  font-size: 20px;
   line-height: 20px;
+  
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+.header-item span {
+  height: 20px;
+  line-height: 20px;
+  color: #999;
+  font-size: 18px;
 }
 #jumps {
-  font-size: 40px;
+  line-height: 28px;
+  font-size: 60px;
+  width: 215px;
   color: #ff0054;
+  letter-spacing: -10px;
 }
-hr {
-  margin: 4px 0;
-  border: 3px solid #ccc;
-  width: 100%;
+.normal span {
+  text-align: center;
 }
+.normal small {
+  text-align: center;
+}
+
+
 #canvas {
   -webkit-transform: rotateX(180deg);
           transform: rotateX(180deg);
 }
-
 .content {
-  border: 2px solid #ddd;
+  border: 5px solid #aaa;
   background: #fff;
+  height: 450px;
+  width: 800px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  position: relative;
 }
-#game.paused .content {
-  border: 2px solid #ff0054;
-  background: #fafafa;
-}
-#game.paused .header__item-value {
-  color: #ddd;
-}
-#game.paused .header__item-label {
-  color: #ddd;
+#game.paused::after, #game.victory::after, #game.gameover::after {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  padding: 160px 60px;
+  top: 0;
+  left: 0;
+  font-size: 30px;
+  text-transform: uppercase;
+  text-align: center;
+  color: #999;
 }
 #game.paused::after {
-  position: absolute;
-  left: 20px;
-  top: 70px;
-  font-size: 20px;
-  content: 'Up-arrow to jump, down-arrow to dive.  Spacebar to start/stop';
-  color: #999;
-  letter-spacing: 2px;
+  content: "Up-arrow to jump, down-arrow to dive.  Spacebar to start/stop";
 }
-.row > p {
+#game.victory::after {
+  content: "Well, you've reached the top!  Thanks for playing, feel free to press spacebar and go again";
+}
+#game.gameover::after {
+  content: "Whoops, hit spacebar to try again";
+}
+footer {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  height: 100px;
+}
+footer div {
+  flex: 1 0 50%;
+  width: 50%;
+}
+footer p {
   font-size: 12px;
   color: #999;
-  padding: 5px 0;
-  line-height: 16px;
-  width: 100%;
+  padding: 2px 20px 4px 2px;
 }
 a {
   color: #ff0054;
