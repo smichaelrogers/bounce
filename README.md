@@ -16,7 +16,7 @@ If the player doesn't get to the top fast enough, things get pretty chaotic:
 
 
 ## Live
-[Play it here](http://www.scottmichael.net/bounce)
+[Play it here](https://smichaelrogers.github.io/bounce)
 
 ---
 
